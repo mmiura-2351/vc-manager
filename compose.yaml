@@ -1,0 +1,10 @@
+services:
+  discord-bot:
+    build: .
+    container_name: discord-bot
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - GUILD_ID={GUILD_ID}
+    volumes:
+      - .:/app
+    restart: unless-stopped
