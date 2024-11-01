@@ -28,9 +28,14 @@ class MyBot(discord.Client):
 
     async def setup_hook(self) -> None:
         """Synchronize commands with the specified guild."""
-        guild = discord.Object(id=self.guild_id)
-        self.tree.copy_global_to(guild=guild)
-        await self.tree.sync(guild=guild)
+        if self.guild_id is not None:
+            guild = discord.Object(id=self.guild_id)
+            self.tree.copy_global_to(guild=guild)
+            res = await self.tree.sync(guild=guild)
+            self.logger.info(f"Synced {len(res)} commands to guild")
+        else:
+            res = await self.tree.sync()
+            self.logger.info(f"Synced {len(res)} commands globally")
 
     async def on_ready(self) -> None:
         """Handle the event when the bot is ready."""
