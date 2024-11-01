@@ -34,4 +34,4 @@ class MyBot(discord.Client):
 
     async def on_ready(self) -> None:
         """Handle the event when the bot is ready."""
-        self.logger.info(f"Logged in as {self.user} (ID: {self.user.id})")  # noqa: G004
+        self.logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
