@@ -68,7 +68,7 @@ class VoiceRoleManager:
                 await member.add_roles(new_role)
                 logger.info(
                     f"Added new role {new_role.name} to {member.name} "
-                    "in guild {guild.id}.",
+                    f"in guild {guild.id}.",
                 )
 
     def get_guild_voice_role(self, guild: discord.Guild) -> int:
