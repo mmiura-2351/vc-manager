@@ -1,3 +1,4 @@
 discord.py
-pytest
+discord.py[voice]
 logzero
+python-dotenv
