@@ -60,42 +60,6 @@ class VoiceRoleManager:
 voice_role_manager = VoiceRoleManager(file_path="guild_roles.json")
 
 
-# async def update_user_role(
-#     member: discord.Member,
-#     before: discord.VoiceState,
-#     after: discord.VoiceState,
-#     manager: VoiceRoleManager,
-# ) -> bool:
-#     """Update the role of a user based on their voice state."""
-#     logger = Logger(logfile="logs/voice.log", name="VoiceStateLogger", level=20)
-
-#     guild = member.guild
-#     role_id = manager.get_guild_voice_role(guild)
-#     if role_id is None:
-#         logger.error(f"No role set for guild {guild.id}.")
-#         return False
-
-#     role = guild.get_role(role_id)
-#     if not role:
-#         logger.error(f"Role ID {role_id} not found in guild {guild.id}.")
-#         return False
-
-#     # check if the user is in a voice channel
-#     if after.channel is not None and before.channel is None:
-#         # Add the role
-#         await member.add_roles(role)
-#         logger.info(f"Added role {role.name} to user {member.name}.")
-#         return True
-
-#     if after.channel is None and before.channel is not None:
-#         # Remove the role
-#         await member.remove_roles(role)
-#         logger.info(f"Removed role {role.name} from user {member.name}.")
-#         return True
-
-#     return False
-
-
 @app_commands.command(
     name="set_voice_role",
     description="Set a role for voice state changes.",
@@ -108,5 +72,36 @@ async def set_guild_voice_role_command(
     guild = interaction.guild
     await voice_role_manager.set_guild_voice_role(guild, role.id)
     await interaction.response.send_message(
-        f"Role {role.name} set for voice state changes.",
+        f"Role `{role.name}` set for voice state changes.",
     )
+
+
+async def update_user_role(
+    member: discord.Member,
+    before: discord.VoiceState,
+    after: discord.VoiceState,
+) -> None:
+    """Update the user's role based on voice state changes."""
+    guild = member.guild
+    role_id = voice_role_manager.get_guild_voice_role(guild)
+
+    if role_id is None:
+        return
+
+    role = guild.get_role(role_id)
+    if role is None:
+        return
+
+    # ユーザーが通話に参加した場合
+    if before.channel is None and after.channel is not None:
+        await member.add_roles(role)
+        Logger(logfile="logs/voice.log", name="VoiceStateLogger", level=20).info(
+            f"Added role {role.name} to {member.name} in guild {guild.id}.",
+        )
+
+    # ユーザーが通話から退出した場合
+    elif before.channel is not None and after.channel is None:
+        await member.remove_roles(role)
+        Logger(logfile="logs/voice.log", name="VoiceStateLogger", level=20).info(
+            f"Removed role {role.name} from {member.name} in guild {guild.id}.",
+        )

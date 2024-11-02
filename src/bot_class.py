@@ -3,6 +3,7 @@
 import discord
 from discord import app_commands
 
+from commands.voice_state import update_user_role
 from utils.logger import Logger
 
 
@@ -40,3 +41,15 @@ class MyBot(discord.Client):
     async def on_ready(self) -> None:
         """Handle the event when the bot is ready."""
         self.logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
+
+    async def on_voice_state_update(
+        self,
+        member: discord.Member,
+        before: discord.VoiceState,
+        after: discord.VoiceState,
+    ) -> None:
+        """Handle the event when a member changes their voice state."""
+        await update_user_role(member, before, after)
+        self.logger.info(
+            f"User {member.name} changed voice state (User ID: {self.user.id})",
+        )
