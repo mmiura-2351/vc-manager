@@ -33,3 +33,10 @@
 ## 使用方法
 
 ボットが起動したら、Discordサーバーでコマンドを使用してボットを操作できます。詳細なコマンドの使用方法については、`src/commands`ディレクトリ内の各ファイルを参照してください。
+
+```
+sudo cp . /usr/local/bin/discord-bot/
+sudo cp discord-bot.service /etc/systemd/system/discord-bot.service
+sudo systemctl daemon-reload
+sudo systemctl start discord-bot.service
+```

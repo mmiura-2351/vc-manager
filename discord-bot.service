@@ -1,12 +1,10 @@
 [Unit]
 Description=Discord Bot Service
-After=docker.service
-Requires=docker.service
 
 [Service]
+Type=simple
 WorkingDirectory=/usr/local/bin/discord-bot/
-ExecStart=/usr/local/bin/discord-bot/ docker compose start
-ExecStop=/usr/local/bin/discord-bot/ docker compose stop
+ExecStart= /home/game-server/.pyenv/versions/3.12.4/bin/python /usr/local/bin/discord-bot/src/bot.py
 Restart=always
 
 [Install]
