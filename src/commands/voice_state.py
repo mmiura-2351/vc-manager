@@ -124,3 +124,27 @@ async def update_user_role(
         Logger(logfile="logs/voice.log", name="VoiceStateLogger", level=20).info(
             f"Removed role {role.name} from {member.name} in guild {guild.id}.",
         )
+
+
+async def initialize_voice_roles(bot: discord.Client) -> None:
+    """Initialize voice roles for members already in voice channels."""
+    for guild in bot.guilds:
+        role_id = voice_role_manager.get_guild_voice_role(guild)
+        if role_id is None:
+            continue
+
+        role = guild.get_role(role_id)
+        if role is None:
+            continue
+
+        for member in guild.members:
+            if member.voice and member.voice.channel:
+                await member.add_roles(role)
+                Logger(
+                    logfile="logs/voice.log",
+                    name="VoiceStateLogger",
+                    level=20,
+                ).info(
+                    f"Added role {role.name} to {member.name} "
+                    f"in guild {guild.id} on startup.",
+                )
