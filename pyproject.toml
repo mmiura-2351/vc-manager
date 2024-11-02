@@ -11,7 +11,7 @@ ignore = [
 fixable = ["ALL"]
 unfixable = []
 
-exclude = ["tests/*"]
+exclude = ["tests/*", "**/__init__.py"]
 
 [tool.ruff.format]
 quote-style = "double"

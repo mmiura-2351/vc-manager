@@ -7,6 +7,7 @@ import discord
 from bot_class import MyBot
 from commands.add import add_command
 from commands.hello import hello_command
+from commands.voice_state import set_guild_voice_role_command
 from utils.env_reader import get_env_value
 
 
@@ -35,6 +36,7 @@ def main() -> None:
     # コマンドを登録
     client.tree.add_command(hello_command)
     client.tree.add_command(add_command)
+    client.tree.add_command(set_guild_voice_role_command)
 
     client.run(get_env_value("DISCORD_TOKEN"))
 
