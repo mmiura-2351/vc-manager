@@ -3,6 +3,7 @@
 import argparse
 
 import discord
+from dotenv import load_dotenv
 
 from bot_class import MyBot
 from commands.voice_state import set_guild_voice_role_command
@@ -34,8 +35,9 @@ def main() -> None:
     # Register commands
     client.tree.add_command(set_guild_voice_role_command)
 
-    client.run(get_env_value("DISCORD_TOKEN"))
+    client.run(get_env_value("DISCORD_TOKEN_VC"))
 
 
 if __name__ == "__main__":
+    load_dotenv()
     main()

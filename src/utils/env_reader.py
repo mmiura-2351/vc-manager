@@ -2,8 +2,6 @@
 
 import os
 
-from dotenv import load_dotenv
-
 
 class EnvVariableNotFoundError(KeyError):
     """Exception raised when an environment variable is not found."""
@@ -19,8 +17,7 @@ def get_env_value(key: str) -> str:
     Raises:
         KeyError: If the environment variable is not found or is None.
     """
-    load_dotenv()
-    value = os.getenv(key)
+    value = os.environ.get(key)
     if value is None:
         raise EnvVariableNotFoundError(key)
     return value
