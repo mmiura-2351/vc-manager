@@ -4,9 +4,9 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-WorkingDirectory=/usr/local/bin/
-ExecStart=/usr/local/bin/docker-compose start
-ExecStop=/usr/local/bin/docker-compose stop
+WorkingDirectory=/usr/local/bin/discord-bot/
+ExecStart=/usr/local/bin/discord-bot/ docker compose start
+ExecStop=/usr/local/bin/discord-bot/ docker compose stop
 Restart=always
 
 [Install]
