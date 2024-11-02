@@ -1,7 +1,0 @@
-services:
-  discord-bot:
-    build: .
-    container_name: discord-bot
-    volumes:
-      - ./logs:/usr/local/bin/discord-bot/logs
-    restart: unless-stopped
