@@ -8,8 +8,6 @@ WorkingDirectory=/usr/local/bin/
 ExecStart=/usr/local/bin/docker-compose start
 ExecStop=/usr/local/bin/docker-compose stop
 Restart=always
-User=discord-bot
-Group=discord-bot
 
 [Install]
 WantedBy=multi-user.target
