@@ -1,5 +1,7 @@
 # vc-manager
 
+修正中
+
 ## セットアップ手順
 
 1. リポジトリをクローンします。
@@ -19,10 +21,14 @@
 3. Docker Composeを使用してプロジェクトをビルドし、起動します。
 
    ```bash
-   docker compose up --build
+   docker compose up --build -d
    ```
 
-4. ボットが正常に起動したことを確認します。ログに「Logged in as...」というメッセージが表示されれば成功です。
+4. 起動したのを確認した後、Docker Composeを使用してbotを停止します。
+
+   ```bash
+   docker compose stop
+   ```
 
 ## 使用方法
 
