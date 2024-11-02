@@ -47,10 +47,29 @@ class VoiceRoleManager:
             )
             return
 
+        old_role_id = self.guild_roles.get(guild.id)
+        new_role = guild.get_role(role_id)
+        old_role = guild.get_role(old_role_id) if old_role_id is not None else None
+
         self.guild_roles[guild.id] = role_id
         self.save_guild_voice_roles()
         logger = Logger(logfile="logs/voice.log", name="VoiceStateLogger", level=20)
         logger.info(f"Set role ID {role_id} for guild {guild.id}.")
+
+        # Remove old role and add new role to members in the guild
+        for member in guild.members:
+            if old_role and old_role in member.roles:
+                await member.remove_roles(old_role)
+                logger.info(
+                    f"Removed old role {old_role.name} from {member.name} "
+                    f"in guild {guild.id}.",
+                )
+            if new_role and member.voice and member.voice.channel:
+                await member.add_roles(new_role)
+                logger.info(
+                    f"Added new role {new_role.name} to {member.name} "
+                    "in guild {guild.id}.",
+                )
 
     def get_guild_voice_role(self, guild: discord.Guild) -> int:
         """Get the role ID set for a guild."""
