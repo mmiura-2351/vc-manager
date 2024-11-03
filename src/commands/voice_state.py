@@ -25,6 +25,7 @@ class VoiceRoleManager:
                 # キーをintに変換
                 return {int(k): v for k, v in data.items()}
         except FileNotFoundError:
+            Path(self.file_path).touch()
             return {}
         except json.JSONDecodeError:
             Logger(logfile="logs/voice.log", name="VoiceStateLogger", level=20).error(
