@@ -8,13 +8,22 @@ from logzero import setup_logger
 class Logger:
     """A logger class to handle logging with a specified name and level."""
 
-    def __init__(self, logfile: str, name: str, level: int = logging.INFO) -> None:
+    def __init__(
+        self,
+        logfile: str,
+        name: str,
+        level: int = logging.INFO,
+        *,
+        disablestderrlogger: bool = False,
+    ) -> None:
         """Initialize the Logger with a specified name and logging level.
 
         Args:
             logfile (str): The path to the log file.
             name (str): The name of the logger.
             level (int, optional): The logging level. Defaults to logging.INFO.
+            disablestderrlogger (bool, optional): Disable the stderr logger.
+                Defaults to False.
         """
         self.logger = setup_logger(
             name=name,
@@ -23,6 +32,7 @@ class Logger:
                 "[%(asctime)s - %(levelname)s] %(message)s",
             ),
             logfile=logfile,
+            disableStderrLogger=disablestderrlogger,
         )
 
     def info(self, message: str) -> None:
