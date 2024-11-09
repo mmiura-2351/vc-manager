@@ -31,7 +31,7 @@ async def ask_ai_command(interaction: discord.Interaction, question: str) -> Non
             {"role": "user", "content": question},
         ],
         n=1,
-        max_tokens=512,
+        max_tokens=1024,
     )
 
     Logger(
