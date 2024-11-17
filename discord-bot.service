@@ -1,0 +1,11 @@
+[Unit]
+Description=Discord Bot Service
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/local/bin/discord-bot/
+ExecStart= /home/game-server/.pyenv/versions/3.12.4/bin/python /usr/local/bin/discord-bot/src/bot.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["ALL"]
+
+ignore = [
+    "G004"
+]
+
+fixable = ["ALL"]
+unfixable = []
+
+exclude = ["tests/*", "**/__init__.py"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.pydocstyle]
+convention = "google"
