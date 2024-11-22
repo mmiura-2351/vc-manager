@@ -72,32 +72,3 @@ async def change_send_channel(
     await interaction.response.send_message(
         f"The notification destination has been changed to `{channel.name}`",
     )
-
-
-@app_commands.command(
-    name="send_test_message",
-    description="Send a test message to the configured channel.",
-)
-async def send_test_message(interaction: discord.Interaction) -> None:
-    """Send a test message to the configured channel."""
-    channel_id = voice_notification.channel_settings.get(interaction.guild.id)
-    if channel_id is None:
-        await interaction.response.send_message(
-            "通知先のチャンネルが設定されていません。",
-            ephemeral=True,
-        )
-        return
-
-    channel = interaction.guild.get_channel(channel_id)
-    if channel is None:
-        await interaction.response.send_message(
-            "設定されたチャンネルが見つかりません。",
-            ephemeral=True,
-        )
-        return
-
-    await channel.send("これはテストメッセージです。")
-    await interaction.response.send_message(
-        f"テストメッセージを `{channel.name}` に送信しました。",
-        ephemeral=True,
-    )
