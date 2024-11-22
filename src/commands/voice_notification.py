@@ -61,6 +61,7 @@ voice_notification = VoiceNotification(file_path="src/channel_settings.json")
     name="change_send_channel",
     description="Change the destination of notifications.",
 )
+@app_commands.describe(channel="Choose a text channel.")
 async def change_send_channel(
     interaction: discord.Interaction,
     channel: discord.TextChannel,
