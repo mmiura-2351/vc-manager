@@ -54,6 +54,9 @@ class VoiceNotification:
             json.dump(self.channel_settings, file, indent=4)
 
 
+voice_notification = VoiceNotification(file_path="src/channel_settings.json")
+
+
 async def check_voicechannel(
     member: discord.Member,
     before: discord.VoiceState,
@@ -90,8 +93,28 @@ async def check_voicechannel(
 
                 await channel.send(embed=embed)
 
+    # 通話終了の通知
+    elif before.channel is not None and after.channel is None:
+        channel_id = voice_notification.channel_settings.get(member.guild.id)
+        if channel_id:
+            channel = member.guild.get_channel(channel_id)
+            if channel:
+                embed = discord.Embed(
+                    title="通話終了",
+                    color=0x1862ED,
+                )
+                embed.add_field(
+                    name="チャンネル",
+                    value=before.channel.name,
+                    inline=True,
+                )
+                embed.add_field(
+                    name="通話時間",
+                    value="T.B.D",
+                    inline=True,
+                )
 
-voice_notification = VoiceNotification(file_path="src/channel_settings.json")
+                await channel.send(embed=embed)
 
 
 @app_commands.command(
