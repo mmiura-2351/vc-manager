@@ -62,14 +62,20 @@ voice_notification = VoiceNotification(file_path="src/channel_settings.json")
     description="Change the destination of notifications.",
 )
 @app_commands.describe(channel="Choose a text channel.")
-@app_commands.checks.has_permissions(administrator=True)
 async def change_send_channel(
     interaction: discord.Interaction,
     channel: discord.TextChannel,
 ) -> None:
     """App command to change the notification destination."""
-    voice_notification.update_channel_settings(interaction.guild.id, channel.id)
+    if not interaction.user.guild_permissions.administrator:
+        await interaction.response.send_message(
+            "You need administrator permissions to use this command.",
+            ephemeral=True,
+        )
 
-    await interaction.response.send_message(
-        f"The notification destination has been changed to `{channel.name}`",
-    )
+    else:
+        voice_notification.update_channel_settings(interaction.guild.id, channel.id)
+
+        await interaction.response.send_message(
+            f"The notification destination has been changed to `{channel.name}`",
+        )
