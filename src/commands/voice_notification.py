@@ -1,5 +1,6 @@
 """This module provides a class for managing voice state change notifications."""
 
+import datetime
 import json
 from pathlib import Path
 
@@ -51,6 +52,43 @@ class VoiceNotification:
         self.channel_settings[guild_id] = channel_id
         with Path(self.file_path).open("w") as file:
             json.dump(self.channel_settings, file, indent=4)
+
+
+async def check_voicechannel(
+    member: discord.Member,
+    before: discord.VoiceState,
+    after: discord.VoiceState,
+) -> None:
+    """Send notifications when a call starts or ends."""
+    if before.channel is None and after.channel is not None:
+        channel_id = voice_notification.channel_settings.get(member.guild.id)
+        if channel_id:
+            channel = member.guild.get_channel(channel_id)
+            if channel:
+                embed = discord.Embed(
+                    title="通話開始",
+                    color=0xF08080,
+                )
+                embed.add_field(
+                    name="チャンネル",
+                    value=after.channel.name,
+                    inline=True,
+                )
+                embed.add_field(
+                    name="始めた人",
+                    value=member.display_name,
+                    inline=True,
+                )
+                embed.add_field(
+                    name="開始時間",
+                    value=datetime.datetime.now(
+                        datetime.timezone(datetime.timedelta(hours=9)),
+                    ).strftime("%Y/%m/%d %H:%M:%S"),
+                    inline=True,
+                )
+                embed.set_thumbnail(url=member.display_avatar.url)
+
+                await channel.send(embed=embed)
 
 
 voice_notification = VoiceNotification(file_path="src/channel_settings.json")
