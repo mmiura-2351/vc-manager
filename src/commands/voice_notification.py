@@ -23,9 +23,8 @@ class VoiceNotification:
         """Load channel settings from a JSON file."""
         try:
             with Path(self.file_path).open() as file:
-                data = json.load(file)
-                self.channel_settings = data
-                return data
+                _data = json.load(file)
+            return {int(key): value for key, value in _data.items()}
 
         except FileNotFoundError:
             Logger(
@@ -33,17 +32,17 @@ class VoiceNotification:
                 name="VoiceNotificationLogger",
                 level=20,
             ).error(
-                "Channel settings file not found.",
+                f"Channel settings file not found: {self.file_path}",
             )
             return {}
 
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
             Logger(
                 logfile="logs/voice_notification.log",
                 name="VoiceNotificationLogger",
                 level=20,
             ).error(
-                "Failed to decode JSON from channel settings file.",
+                f"Failed to decode JSON from channel settings file: {e}",
             )
             return {}
 
