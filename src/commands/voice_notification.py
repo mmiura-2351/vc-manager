@@ -2,6 +2,7 @@
 
 import datetime
 import json
+import time
 from pathlib import Path
 
 import discord
@@ -17,6 +18,7 @@ class VoiceNotification:
         """Initialize the VoiceNotification with a file path and channel settings."""
         self.file_path = file_path
         self.channel_settings = self.load_channel_settings()
+        self.voice_channel_state = {}
 
         self.load_channel_settings()
 
@@ -65,7 +67,17 @@ async def check_voicechannel(
     """Send notifications when a call starts or ends."""
     if before.channel is None and after.channel is not None:
         channel_id = voice_notification.channel_settings.get(member.guild.id)
+
+        # 通話開始時間を保存
+        # ex) d[guild_id][voice_channel_id][time.time()]
+        if member.guild.id not in voice_notification.voice_channel_state:
+            voice_notification.voice_channel_state[member.guild.id] = {}
+        voice_notification.voice_channel_state[member.guild.id][
+            member.voice.channel.id
+        ] = time.time()
+
         if channel_id:
+            # 埋め込みメッセージを生成
             channel = member.guild.get_channel(channel_id)
             if channel:
                 embed = discord.Embed(
@@ -97,8 +109,32 @@ async def check_voicechannel(
     elif before.channel is not None and after.channel is None:
         channel_id = voice_notification.channel_settings.get(member.guild.id)
         if channel_id:
+            # 埋め込みメッセージを生成
             channel = member.guild.get_channel(channel_id)
             if channel:
+                end_time = time.time()
+                start_time = voice_notification.voice_channel_state.get(
+                    member.guild.id,
+                    {},
+                ).get(before.channel.id)
+
+                duration = end_time - start_time if start_time else 0
+
+                # 通話時間をhh:mm:ssで表示
+                hours, remainder = divmod(duration, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                duration_str = (
+                    f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
+                    if start_time
+                    else "不明"
+                )
+
+                # 通話終了時に開始時間の値を削除
+                if start_time:
+                    del voice_notification.voice_channel_state[member.guild.id][
+                        before.channel.id
+                    ]
+
                 embed = discord.Embed(
                     title="通話終了",
                     color=0x1862ED,
@@ -110,7 +146,7 @@ async def check_voicechannel(
                 )
                 embed.add_field(
                     name="通話時間",
-                    value="T.B.D",
+                    value=duration_str,
                     inline=True,
                 )
 
