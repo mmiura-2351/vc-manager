@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 from bot_class import MyBot
 from commands.chat import ask_ai_command
+from commands.voice_notification import change_send_channel
 from commands.voice_state import set_guild_voice_role_command
 from utils.env_reader import get_env_value
 
@@ -36,6 +37,7 @@ def main() -> None:
     # Register commands
     client.tree.add_command(set_guild_voice_role_command)
     client.tree.add_command(ask_ai_command)
+    client.tree.add_command(change_send_channel)
 
     client.run(get_env_value("DISCORD_TOKEN_VC"))
 

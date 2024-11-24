@@ -3,6 +3,7 @@
 import discord
 from discord import app_commands
 
+from commands.voice_notification import check_voicechannel
 from commands.voice_state import initialize_voice_roles, update_user_role
 from utils.logger import Logger
 
@@ -51,6 +52,7 @@ class MyBot(discord.Client):
     ) -> None:
         """Handle the event when a member changes their voice state."""
         await update_user_role(member, before, after)
+        await check_voicechannel(member, before, after)
         self.logger.info(
             f"User {member.name} changed voice state (User ID: {self.user.id})",
         )
